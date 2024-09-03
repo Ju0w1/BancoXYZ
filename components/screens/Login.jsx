@@ -2,7 +2,7 @@ import { Stack } from "expo-router";
 import React, {useState} from "react"
 import { View, StyleSheet, Text, TextInput, Pressable, Alert, ActivityIndicator } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Screen } from "./Screen";
+import { Screen } from "../Screen";
 import { useRouter } from 'expo-router';
 
 export function Login(){
@@ -16,7 +16,6 @@ export function Login(){
 
         if (email === 'peculio.pablo@gmail.com' && password === 'pass') {
             await AsyncStorage.setItem('userToken', 'abc123');
-            console.log(email, password);
             setLoading(false);
             router.push('/inicio');
         } else {
@@ -71,12 +70,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'skyblue'
+        backgroundColor: '#007AFF'
     },
     title: {
       fontWeight: 'bold',
       fontSize: 50,
       marginBottom: 80,
+      color: 'white'
     },
     inputContainer:{
         justifyContent: 'center',
@@ -86,16 +86,17 @@ const styles = StyleSheet.create({
     input: {
         height: 40,
         width: '100%',
-        borderColor: 'steelblue',
+        borderColor: 'white',
         borderRadius: 20,
         borderWidth: 1,
         paddingHorizontal: 10,
         marginBottom: 10,
-        backgroundColor: 'powderblue'
+        backgroundColor: 'white',
+        color: 'black'
       },
     button:{
         borderRadius: 20,
-        backgroundColor: 'steelblue',
+        backgroundColor: 'white',
         paddingHorizontal: 20,
         paddingVertical: 10,
         width: '50%',
@@ -105,5 +106,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20,
         textAlign: 'center',
+        color: '#007AFF'
     }
   });

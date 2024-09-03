@@ -1,12 +1,12 @@
 import { Alert, FlatList, Pressable, StyleSheet, Text, View } from "react-native";
-import { Screen } from "./Screen";
+import { Screen } from "../Screen";
 import { Stack } from "expo-router";
-import { Logo } from "./Logo";
-import { LogOutIcon, MoneyIcon } from "./Icons";
+import { Logo } from "../Logo";
+import { LogOutIcon, MoneyIcon } from "../Icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from 'expo-router';
-import { SaldoActual } from "./SaldoActual";
-import { Title } from "./Title";
+import { SaldoActual } from "../SaldoActual";
+import { Title } from "../Title";
 
 export function Home(){
     const router = useRouter();
@@ -54,10 +54,11 @@ export function Home(){
                             <LogOutIcon/>
                         </Pressable>
                     ),
+                    gestureEnabled: false,
                     title: ""
                 }}
             />
-            <Title title = {'Cuentas'} icon = {'attach-money'} />
+            <Title title = {'Cuentas'} icon = {'attach-money'}/>
             <FlatList 
                 data={arrayOfAccouns}
                 keyExtractor={(account) => account.id}

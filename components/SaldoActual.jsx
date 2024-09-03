@@ -3,32 +3,26 @@ import {
   StyleSheet,
   Text,
   Pressable,
-  Alert,
 } from "react-native";
-import { GenericIcon } from "./Icons";
+import { Link } from "expo-router";
 
 export function SaldoActual({ cuenta }){
-    const handleAccountInfo = () => {
-        Alert.alert(
-            'Acceder a cuenta', 
-            'Se mostrara listado de transacciones y se podra enviar transaccion',
-        )
-    };
 
     return (
-        <View style={styles.container}>
-            <View>
-              <Text style={styles.tipoCuenta}>
-                  Cuenta {cuenta.tipoCuenta ? cuenta.tipoCuenta : ''}
-              </Text>
-              <Text style={styles.balance}>
-                  {cuenta.tipoCuenta === 'USD' ? 'USD' : cuenta.tipoCuenta === 'UYU' ? 'UYU' : 'UNKNOWN'} {cuenta.balance}
-              </Text>
-            </View>
-            <Pressable onPress={handleAccountInfo}>
-              <GenericIcon name='info-outline'/>
-            </Pressable>
-        </View>
+      <Link href={`${cuenta.id}`} asChild>
+        <Pressable>
+          <View style={styles.container}>
+              <View>
+                <Text style={styles.tipoCuenta}>
+                    Cuenta {cuenta.tipoCuenta ? cuenta.tipoCuenta : ''}
+                </Text>
+                <Text style={styles.balance}>
+                    {cuenta.tipoCuenta === 'USD' ? 'USD' : cuenta.tipoCuenta === 'UYU' ? 'UYU' : 'UNKNOWN'} {cuenta.balance}
+                </Text>
+              </View>
+          </View>
+        </Pressable>
+      </Link>
     )
 }
 
