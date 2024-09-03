@@ -21,7 +21,7 @@ export function Login(){
             router.push('/inicio');
         } else {
             Alert.alert('Error al iniciar sesion.', 'Correo o contraseña incorrecta')
-            // console.log('Error al iniciar sesion.', 'Correo o contraseña incorrecta');
+            setLoading(false);
         }
     };
 
