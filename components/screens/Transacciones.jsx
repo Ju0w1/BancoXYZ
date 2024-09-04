@@ -5,8 +5,13 @@ import { Title } from "../Title";
 import { PressableWithChildren } from "../PressableWithChildren";
 import { GenericIcon } from "../Icons";
 import { TransactionCard } from "../TransactionCard";
+import { SearchBar } from "../SeachBar";
+import { useState, useEffect } from "react";
+
 
 export function TransaccionesMenu (props){
+    const [search, setSearch] = useState('');
+    const [filteredTransactions, setFilteredTransactions] = useState([]);
 
     const {account} = props
 
@@ -15,6 +20,11 @@ export function TransaccionesMenu (props){
         router.push('/transfer');
         
     };
+
+    const handleSearchBar = (query) => {
+        setSearch(query)
+        
+    }
 
     const arrayOfTransacctions = [
         {
@@ -43,7 +53,19 @@ export function TransaccionesMenu (props){
         },
     ]
 
-    return(
+    useEffect(() => {
+        const query = search.toLowerCase();
+        const filtered = arrayOfTransacctions.filter((transaction) => {
+            const conceptoMatch = transaction.concepto.toLowerCase().includes(query);
+            const importeMatch = transaction.importe.toString().includes(query);
+            const fechaMatch = transaction.fecha.toLocaleDateString().includes(query);
+
+            return conceptoMatch || importeMatch || fechaMatch;
+        });
+        setFilteredTransactions(filtered);
+    }, [search]);
+
+    return (
         <Screen>
             <Stack.Screen
                 options={{
@@ -53,25 +75,30 @@ export function TransaccionesMenu (props){
                     headerBackTitle: 'Inicio',
                 }}
             />
-            <Title title = {'Movimientos'} icon = {'list'} >
+            <Title title={'Movimientos'} icon={'list'}>
                 <PressableWithChildren onPress={handleNewTransfer} style={styles.rightContainer}>
-                    { (
-                        <>
-                            <Text style={styles.secondTitle}>Transferir</Text>
-                            <GenericIcon size={18} color="black" name='add'/>
-                        </>
-                    )}
+                    <>
+                        <Text style={styles.secondTitle}>Transferir</Text>
+                        <GenericIcon size={18} color="black" name='add'/>
+                    </>
                 </PressableWithChildren>
             </Title>
-            <FlatList style = {styles.lista}
-                data={arrayOfTransacctions}
-                keyExtractor={(account, index) => index}
-                renderItem={({item}) => (
-                    <TransactionCard transaccion={item}/>
+            <FlatList
+                data={filteredTransactions}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={({ item }) => (
+                    <TransactionCard transaccion={item} />
                 )}
-            />       
+                ListHeaderComponent={
+                    <SearchBar
+                        onChangeText={(query) => handleSearchBar(query)}
+                        value={search}
+                        placeholder="Filtro (concepto, fecha, importe)"
+                    />
+                }
+            />
         </Screen>
-    )
+    );
 }
 
 const styles = StyleSheet.create({

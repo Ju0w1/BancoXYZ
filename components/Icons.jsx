@@ -9,5 +9,5 @@ export const MoneyIcon = (props) => (
 )
 
 export const GenericIcon = (props) => (
-    <MaterialIcons {...props} />
+    <MaterialIcons {...props}/>
 )
