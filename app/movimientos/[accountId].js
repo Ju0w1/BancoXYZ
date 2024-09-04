@@ -1,4 +1,4 @@
-import { TransaccionesMenu } from "../components/screens/Transacciones";
+import { TransaccionesMenu } from "../../components/screens/Transacciones";
 import { useLocalSearchParams } from "expo-router";
 
 export default function Transacciones(){

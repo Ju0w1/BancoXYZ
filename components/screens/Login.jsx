@@ -44,11 +44,13 @@ export function Login(){
                                 placeholder="Email"
                                 value={email}
                                 onChangeText={setEmail}
+                                inputMode="email"
                             />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Contraseña"
                                 value={password}
+                                inputMode="text"
                                 onChangeText={setPassword}
                                 secureTextEntry
                             />

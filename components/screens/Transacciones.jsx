@@ -7,18 +7,18 @@ import { GenericIcon } from "../Icons";
 import { TransactionCard } from "../TransactionCard";
 import { SearchBar } from "../SeachBar";
 import { useState, useEffect } from "react";
-
+import { useRouter } from 'expo-router';
 
 export function TransaccionesMenu (props){
+    const router = useRouter();
+
     const [search, setSearch] = useState('');
     const [filteredTransactions, setFilteredTransactions] = useState([]);
 
     const {account} = props
 
     const handleNewTransfer = async () => {
-
-        router.push('/transfer');
-        
+        router.push(`../transferir/${account}`, { relativeToDirectory: true });
     };
 
     const handleSearchBar = (query) => {

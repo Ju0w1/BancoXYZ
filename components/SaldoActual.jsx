@@ -9,7 +9,7 @@ import { Link } from "expo-router";
 export function SaldoActual({ cuenta }){
 
     return (
-      <Link href={`${cuenta.id}`} asChild>
+      <Link href={`movimientos/${cuenta.id}`} asChild>
         <Pressable>
           <View style={styles.container}>
               <View>
