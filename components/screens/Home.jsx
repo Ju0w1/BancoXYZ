@@ -59,29 +59,20 @@ export function Home(){
                 }}
             />
             <Title title = {'Cuentas'} icon = {'attach-money'}/>
-            <FlatList 
+            <FlatList style = {styles.lista}
                 data={arrayOfAccouns}
                 keyExtractor={(account) => account.id}
                 renderItem={({item, index}) => (
                     <SaldoActual cuenta={item}/>
                 )}
-            >
-            </FlatList>
+            />
         </Screen>
     )
 }
 
 
 const styles = StyleSheet.create({
-    container:{
-        color: 'blue',
-        marginHorizontal: 20,
-        marginTop: 20,
-        flexDirection: 'row',
-        alignItems: 'center'
+    lista:{
+        paddingTop: 10,
     },
-    title:{
-        fontSize: 20,
-        fontWeight: 'bold'
-    }
 })

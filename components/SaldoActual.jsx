@@ -37,10 +37,10 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 5,
         marginHorizontal: 20,
-        marginTop: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginBottom: 20,
     },
     tipoCuenta: {
         fontSize: 18,
