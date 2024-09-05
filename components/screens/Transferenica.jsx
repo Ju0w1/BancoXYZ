@@ -42,8 +42,6 @@ export function Transferencia (props){
                 transferDate: fecha.toISOString().slice(0,10)
             }
 
-            console.log(body)
-
             const token = await AsyncStorage.getItem('userToken');
             const response = await fetch('https://ofqx4zxgcf.execute-api.us-east-1.amazonaws.com/default/transfer',{
                 method: 'POST',
