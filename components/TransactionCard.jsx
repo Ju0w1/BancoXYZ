@@ -4,7 +4,7 @@ import {
     Text,
   } from "react-native";
 import { GenericIcon } from "./Icons";
-  
+   
   export function TransactionCard ({ transaccion }){
       return (
         <View style={styles.container}>
@@ -16,9 +16,12 @@ import { GenericIcon } from "./Icons";
                         <GenericIcon size={16} color='green' name='arrow-downward'/>
                     ) 
                 }
-                <Text style={styles.concepto}>
-                    {transaccion.concepto.toUpperCase()}
-                </Text>
+                <View style={styles.textWrap}>
+                  <Text style={styles.concepto} numberOfLines={2}>
+                      {transaccion.concepto.toUpperCase()}
+                  </Text>
+                </View>
+                
             </View>
             <View style={styles.lowerContainer}>
                 <Text style={styles.fecha}>
@@ -38,14 +41,20 @@ import { GenericIcon } from "./Icons";
           padding: 10,
           flexDirection: 'column',
           justifyContent: 'space-between',
-          height: 70,
+          height: 80,
           borderBottomWidth: 1,
-          justifyContent: 'space-between',
+      },
+      textWrap:{
+        flexDirection: 'column',
+        justifyContent: 'space-between',
+        height: 80,
+        paddingRight: 10
       },
       upperContainer:{
         width: '100%',
         flexDirection: 'row',
         height: '50%',
+        
       },
       lowerContainer:{
         width: '100%',

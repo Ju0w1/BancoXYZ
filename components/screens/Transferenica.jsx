@@ -1,4 +1,4 @@
-import { Text, StyleSheet, FlatList, View, TextInput} from "react-native";
+import { Text, StyleSheet, FlatList, View, TextInput, Alert, ActivityIndicator} from "react-native";
 import { Screen } from "../Screen";
 import { Stack } from "expo-router";
 import { Title } from "../Title";
@@ -7,13 +7,15 @@ import { PressableWithChildren } from "../PressableWithChildren";
 import { GenericIcon } from "../Icons";
 import { DatetimePicker } from "../DateTimePicker";
 import Checkbox from "expo-checkbox";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 export function Transferencia (props){
     const [document, setDocument] = useState('');
-    const [monto, setMonto] = useState('');
+    const [monto, setMonto] = useState(0);
     const [fecha, setFecha] = useState(new Date());
     const [isChecked, setChecked] = useState(false);
+    const [isLoading, setLoading] = useState(false);
 
     const {account} = props
 
@@ -26,6 +28,47 @@ export function Transferencia (props){
 
         if(checkboxState === false){
             setFecha(new Date())
+        }
+    }
+
+    const handleTransfer = async () => {
+        try{
+            setLoading(true)
+
+            const body = {
+                value: parseFloat(monto),
+                currency: account == 0 ? 'USD' : null,
+                payeerDocument: document,
+                transferDate: fecha.toISOString().slice(0,10)
+            }
+
+            console.log(body)
+
+            const token = await AsyncStorage.getItem('userToken');
+            const response = await fetch('https://ofqx4zxgcf.execute-api.us-east-1.amazonaws.com/default/transfer',{
+                method: 'POST',
+                headers: {
+                    'Authorization' : `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            })
+
+            const data = await response.json()
+
+            if(response.ok){
+                Alert.alert('Transferencia enviada', data.message)
+                setDocument('')
+                setMonto('')
+                setFecha(new Date())
+                setChecked(false)
+            }else{
+                Alert.alert('Error al enviar transferencia', data.message)
+            }
+        }catch(error){
+            console.log(error)
+        }finally{
+            setLoading(false)
         }
     }
 
@@ -44,56 +87,64 @@ export function Transferencia (props){
                 <Text style={styles.account}>Cuenta: {account}</Text>
                 <Text style={styles.accountType}>{account == 0 ? 'USD' : 'UYU'}</Text>
             </View>
-            <View style={styles.container}>
-                <Text style={styles.placeholder}>Documento</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="51091626"
-                    value={document}
-                    onChangeText={setDocument}
-                    inputMode="text"
-                />
-                <Text style={styles.placeholder}>Monto</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="1500"
-                    value={monto}
-                    onChangeText={setMonto}
-                    inputMode="decimal"
-                />
-                <View style={styles.section}>
-                    <Checkbox 
-                        style={styles.checkbox} 
-                        value={isChecked} 
-                        onValueChange={onChangeCheckbox}
-                    />
-                    <Text style={styles.paragraph}>
-                        Programar fecha
-                    </Text>
-                </View>
-                {
-                    isChecked ? (
-                        <DatetimePicker 
-                            onChange={onChangeDate}
-                            currentDate={fecha}
+            {
+                isLoading ? (
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <ActivityIndicator size={"large"} />
+                    </View>
+                ) : (
+                    <View style={styles.container}>
+                        <Text style={styles.placeholder}>Documento</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="51091626"
+                            value={document}
+                            onChangeText={setDocument}
+                            inputMode="text"
                         />
-                    ) : (
-                        null
-                    )
-                }
-                <PressableWithChildren style={styles.buttonContainer}>
-                    <View style={styles.button}>
-                        <Text style={styles.textButton}>Transferir</Text>
+                        <Text style={styles.placeholder}>Monto</Text>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="1500"
+                            value={monto}
+                            onChangeText={setMonto}
+                            inputMode="decimal"
+                        />
+                        <View style={styles.section}>
+                            <Checkbox 
+                                style={styles.checkbox} 
+                                value={isChecked} 
+                                onValueChange={onChangeCheckbox}
+                            />
+                            <Text style={styles.paragraph}>
+                                Programar fecha
+                            </Text>
+                        </View>
                         {
                             isChecked ? (
-                                <GenericIcon size={18} color="white" name='schedule-send'/>
+                                <DatetimePicker 
+                                    onChange={onChangeDate}
+                                    currentDate={fecha}
+                                />
                             ) : (
-                                <GenericIcon size={18} color="white" name='send'/>
+                                null
                             )
                         }
+                        <PressableWithChildren onPress={handleTransfer} style={styles.buttonContainer}>
+                            <View style={styles.button}>
+                                <Text style={styles.textButton}>Transferir</Text>
+                                {
+                                    isChecked ? (
+                                        <GenericIcon size={18} color="white" name='schedule-send'/>
+                                    ) : (
+                                        <GenericIcon size={18} color="white" name='send'/>
+                                    )
+                                }
+                            </View>
+                        </PressableWithChildren>
                     </View>
-                </PressableWithChildren>
-            </View>
+                )
+            }
         </Screen>
     );
 }

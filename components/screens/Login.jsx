@@ -14,12 +14,29 @@ export function Login(){
     const handleLogin = async () => {
         setLoading(true);
 
-        if (email === 'peculio.pablo@gmail.com' && password === 'pass') {
-            await AsyncStorage.setItem('userToken', 'abc123');
-            setLoading(false);
-            router.push('/inicio');
-        } else {
-            Alert.alert('Error al iniciar sesion.', 'Correo o contraseña incorrecta')
+        try{
+            const response = await fetch('https://qf5k9fspl0.execute-api.us-east-1.amazonaws.com/default/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            })
+
+            const data = await response.json()
+
+            if(response.ok && data.token){
+                AsyncStorage.setItem('userToken', data.token);
+                router.push('/inicio');
+            }else{
+                Alert.alert('Error al iniciar sesion.', data.message)
+            }
+        }catch(err){
+            Alert.alert('Error de conexion', 'Valide su conexion a internet')
+        }finally{
             setLoading(false);
         }
     };

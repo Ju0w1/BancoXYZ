@@ -1,4 +1,4 @@
-import { Text, StyleSheet, FlatList} from "react-native";
+import { Text, StyleSheet, FlatList, View, ActivityIndicator} from "react-native";
 import { Screen } from "../Screen";
 import { Stack } from "expo-router";
 import { Title } from "../Title";
@@ -8,62 +8,84 @@ import { TransactionCard } from "../TransactionCard";
 import { SearchBar } from "../SeachBar";
 import { useState, useEffect } from "react";
 import { useRouter } from 'expo-router';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const TRANSACCTIONS_ENDPOINT = 'https://n0qaa2fx3c.execute-api.us-east-1.amazonaws.com/default/transferList'
 
 export function TransaccionesMenu (props){
-    const router = useRouter();
+    const {account} = props
+
+    const [isLoading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
+    const [arrayOfTransacctions, setTransacctions] = useState([])
+
+    useEffect(() => {
+        setLoading(true)
+        fetchData(TRANSACCTIONS_ENDPOINT)
+    },[])
+
+    const fetchData = async (url) => {
+        try {
+            const token = await AsyncStorage.getItem('userToken');
+            const response = await fetch(url,{
+                headers: {
+                    'Authorization' : `Bearer ${token}`
+                }
+            })
+            const json = await response.json()
+
+            const transacctions = json.transfers
+
+            const newArray = []
+
+            transacctions.forEach(element => {
+                const newTransaction = {
+                    idCuenta: account,
+                    moneda: element.currency,
+                    importe: element.value ,
+                    concepto: `Transferencia de ${element.payeer.name} con documento ${element.payeer.document}`,
+                    fecha: new Date(element.date),
+                    enviado: false,
+                }
+
+                newArray.push(newTransaction)
+            });
+            
+            setTransacctions(newArray)
+        }catch (error){
+            setError(error)
+            console.log(error)
+        }finally{
+            setLoading(false)
+        }
+    }
 
     const [search, setSearch] = useState('');
     const [filteredTransactions, setFilteredTransactions] = useState([]);
 
-    const {account} = props
+    const handleSearchBar = (query) => {
+        setSearch(query)
+    }
+
+    useEffect(() => {
+        if(!isLoading){
+            const query = search.toLowerCase();
+            const filtered = arrayOfTransacctions.filter((transaction) => {
+                const conceptoMatch = transaction.concepto.toLowerCase().includes(query);
+                const importeMatch = transaction.importe.toString().includes(query);
+                const fechaMatch = transaction.fecha.toLocaleDateString().includes(query);
+    
+                return conceptoMatch || importeMatch || fechaMatch;
+            });
+            setFilteredTransactions(filtered);
+        }
+    }, [search, arrayOfTransacctions, isLoading]);
+
+    const router = useRouter();
 
     const handleNewTransfer = async () => {
         router.push(`../transferir/${account}`, { relativeToDirectory: true });
     };
-
-    const handleSearchBar = (query) => {
-        setSearch(query)
-        
-    }
-
-    const arrayOfTransacctions = [
-        {
-            idCuenta: account,
-            moneda: account == 0 ? 'USD' : 'UYU',
-            importe: account == 0 ? 1999.50 : 45000 ,
-            concepto: 'Transferencia a X',
-            fecha: new Date('2024-09-04'),
-            enviado: true,
-        },
-        {
-            idCuenta: account,
-            moneda: account == 0 ? 'USD' : 'UYU',
-            importe: account == 0 ? 100 : 4000 ,
-            concepto: 'Transferencia a X',
-            fecha: new Date('2024-09-03'),
-            enviado: true,
-        },
-        {
-            idCuenta: account,
-            moneda: account == 0 ? 'USD' : 'UYU',
-            importe: account == 0 ? 250.50 : 28000 ,
-            concepto: 'Transferencia a X',
-            fecha: new Date('2024-09-05'),
-            enviado: false,
-        },
-    ]
-
-    useEffect(() => {
-        const query = search.toLowerCase();
-        const filtered = arrayOfTransacctions.filter((transaction) => {
-            const conceptoMatch = transaction.concepto.toLowerCase().includes(query);
-            const importeMatch = transaction.importe.toString().includes(query);
-            const fechaMatch = transaction.fecha.toLocaleDateString().includes(query);
-
-            return conceptoMatch || importeMatch || fechaMatch;
-        });
-        setFilteredTransactions(filtered);
-    }, [search]);
 
     return (
         <Screen>
@@ -76,27 +98,36 @@ export function TransaccionesMenu (props){
                 }}
             />
             <Title title={'Movimientos'} icon={'list'}>
-                <PressableWithChildren onPress={handleNewTransfer} style={styles.rightContainer}>
+                <PressableWithChildren disabled={isLoading ? true : false} onPress={handleNewTransfer} style={styles.rightContainer}>
                     <>
                         <Text style={styles.secondTitle}>Transferir</Text>
                         <GenericIcon size={18} color="black" name='add'/>
                     </>
                 </PressableWithChildren>
             </Title>
-            <FlatList
-                data={filteredTransactions}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item }) => (
-                    <TransactionCard transaccion={item} />
-                )}
-                ListHeaderComponent={
-                    <SearchBar
-                        onChangeText={(query) => handleSearchBar(query)}
-                        value={search}
-                        placeholder="Filtro (concepto, fecha, importe)"
+            {
+                isLoading ? (
+                    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+                        <ActivityIndicator size={'large'}/>
+                    </View>
+                ): (
+                    <FlatList
+                        data={filteredTransactions}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => (
+                            <TransactionCard transaccion={item} />
+                        )}
+                        ListHeaderComponent={
+                            <SearchBar
+                                onChangeText={(query) => handleSearchBar(query)}
+                                value={search}
+                                placeholder="Filtro (concepto, fecha, importe)"
+                            />
+                        }
                     />
-                }
-            />
+                )
+            }
+            
         </Screen>
     );
 }
