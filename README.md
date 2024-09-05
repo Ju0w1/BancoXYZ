@@ -40,13 +40,13 @@ BancoXYZ es una aplicación móvil para gestionar transacciones financieras. Est
 ## Capturas de pantalla en iOS y Android
 
 ![Login iOS](/capturas/ios/login.PNG)
-![Login Android](/capturas/android/login.PNG)
+![Login Android](/capturas/android/login.png)
 
 ![Home iOS](/capturas/ios/home.PNG)
-![Home Android](/capturas/android/home.PNG)
+![Home Android](/capturas/android/home.png)
 
 ![Transacciones iOS](/capturas/ios/transferencias.PNG)
-![Transacciones Android](/capturas/android/transferencias.PNG)
+![Transacciones Android](/capturas/android/transferencias.png)
 
 ![Nueva transferencia iOS](/capturas/ios/transferir.PNG)
-![Nueva transferencia Android](/capturas/android/transferir.PNG)
+![Nueva transferencia Android](/capturas/android/transferir.png)
