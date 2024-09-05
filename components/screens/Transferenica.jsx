@@ -5,22 +5,29 @@ import { Title } from "../Title";
 import { useState } from "react";
 import { PressableWithChildren } from "../PressableWithChildren";
 import { GenericIcon } from "../Icons";
+import { DatetimePicker } from "../DateTimePicker";
+import Checkbox from "expo-checkbox";
 
 
 export function Transferencia (props){
     const [document, setDocument] = useState('');
     const [monto, setMonto] = useState('');
-    const [fecha, setFecha] = useState('');
+    const [fecha, setFecha] = useState(new Date());
+    const [isChecked, setChecked] = useState(false);
 
     const {account} = props
 
-    const handleFecha = () => {
-        const dateFormat = new Date(fecha)
-        console.log(dateFormat)
+    function onChangeDate(newDate){
+        setFecha(newDate || new Date())
     }
 
-    
-    
+    function onChangeCheckbox(checkboxState){
+        setChecked(checkboxState)
+
+        if(checkboxState === false){
+            setFecha(new Date())
+        }
+    }
 
     return (
         <Screen>
@@ -54,23 +61,36 @@ export function Transferencia (props){
                     onChangeText={setMonto}
                     inputMode="decimal"
                 />
-                <Text style={styles.placeholder}>Fecha</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="10/10/2024"
-                    value={fecha}
-                    onChangeText={setFecha}
-                    onEndEditing={handleFecha}
-                    inputMode="text"
-                />
+                <View style={styles.section}>
+                    <Checkbox 
+                        style={styles.checkbox} 
+                        value={isChecked} 
+                        onValueChange={onChangeCheckbox}
+                    />
+                    <Text style={styles.paragraph}>
+                        Programar fecha
+                    </Text>
+                </View>
+                {
+                    isChecked ? (
+                        <DatetimePicker 
+                            onChange={onChangeDate}
+                            currentDate={fecha}
+                        />
+                    ) : (
+                        null
+                    )
+                }
                 <PressableWithChildren style={styles.buttonContainer}>
                     <View style={styles.button}>
                         <Text style={styles.textButton}>Transferir</Text>
                         {
-
+                            isChecked ? (
+                                <GenericIcon size={18} color="white" name='schedule-send'/>
+                            ) : (
+                                <GenericIcon size={18} color="white" name='send'/>
+                            )
                         }
-                        {/* <GenericIcon size={18} color="white" name='schedule-send'/> */}
-                        <GenericIcon size={18} color="white" name='send'/>
                     </View>
                 </PressableWithChildren>
             </View>
@@ -126,13 +146,25 @@ const styles = StyleSheet.create({
     buttonContainer:{
         width: '100%',
         alignItems: 'center',
-        marginTop: 50,
+        marginTop: 30,
     },
     textButton:{
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
-        // marginRight: 10
-    }
+    },
+    section: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    paragraph: {
+        fontSize: 15,
+    },
+    checkbox: {
+        marginTop: 8,
+        marginRight: 8,
+        marginBottom: 8
+    },
 })
 
