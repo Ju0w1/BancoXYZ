@@ -39,14 +39,30 @@ BancoXYZ es una aplicación móvil para gestionar transacciones financieras. Est
 
 ## Capturas de pantalla en iOS y Android
 
-![Login iOS](/capturas/ios/login.PNG)
-![Login Android](/capturas/android/login.png)
+### Pantalla de Login
 
-![Home iOS](/capturas/ios/home.PNG)
-![Home Android](/capturas/android/home.png)
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+  <img src="/capturas/ios/login.PNG" alt="Login iOS" style="width: 45%;"/>
+  <img src="/capturas/android/login.png" alt="Login Android" style="width: 45%;"/>
+</div>
 
-![Transacciones iOS](/capturas/ios/transferencias.PNG)
-![Transacciones Android](/capturas/android/transferencias.png)
+### Pantalla de Home
 
-![Nueva transferencia iOS](/capturas/ios/transferir.PNG)
-![Nueva transferencia Android](/capturas/android/transferir.png)
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+  <img src="/capturas/ios/home.PNG" alt="Home iOS" style="width: 45%;"/>
+  <img src="/capturas/android/home.png" alt="Home Android" style="width: 45%;"/>
+</div>
+
+### Pantalla de Transacciones
+
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+  <img src="/capturas/ios/transferencias.PNG" alt="Transacciones iOS" style="width: 45%;"/>
+  <img src="/capturas/android/transferencias.png" alt="Transacciones Android" style="width: 45%;"/>
+</div>
+
+### Pantalla de Nueva Transferencia
+
+<div style="display: flex; justify-content: space-around; flex-wrap: wrap;">
+  <img src="/capturas/ios/transferir.PNG" alt="Nueva transferencia iOS" style="width: 45%;"/>
+  <img src="/capturas/android/transferir.png" alt="Nueva transferencia Android" style="width: 45%;"/>
+</div>
