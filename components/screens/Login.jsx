@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Screen } from "../Screen";
 import { useRouter } from 'expo-router';
 
-export function Login(){
+export default function Login(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -52,7 +52,7 @@ export function Login(){
                 <Text style={styles.title}>Login</Text>
 
                 {loading ? (
-                    <ActivityIndicator color={"black"}  size={"large"} />
+                    <ActivityIndicator testID="loading-indicator" color={"black"}  size={"large"} />
                 ) : (
                     <>
                         <View style={styles.inputContainer}>
@@ -62,19 +62,21 @@ export function Login(){
                                 value={email}
                                 onChangeText={setEmail}
                                 inputMode="email"
+                                testID="email-input"
                             />
                             <TextInput
                                 style={styles.input}
                                 placeholder="Contraseña"
                                 value={password}
                                 inputMode="text"
+                                testID="password-input"
                                 onChangeText={setPassword}
                                 secureTextEntry
                             />
                         </View>
-                        <Pressable style={styles.button} onPress={handleLogin}>
+                        <Pressable testID="login-button" style={styles.button} onPress={handleLogin}>
                             <Text style={styles.buttonText}>
-                                Ingesar
+                                Ingresar
                             </Text>
                         </Pressable>
                     </>
