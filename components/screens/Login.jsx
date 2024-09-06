@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Screen } from "../Screen";
 import { useRouter } from 'expo-router';
 
-export default function Login(){
+export function Login(){
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);

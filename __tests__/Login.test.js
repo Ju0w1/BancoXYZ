@@ -1,15 +1,9 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import Login from '../components/screens/Login';
+import { Login } from '../components/screens/Login';
 import { Alert } from 'react-native';
 import { __getMockPush, __mockReset } from 'expo-router';
-import AsyncStorage, { __getMockStorage } from '../__mocks__/async-storage';
-
-// Mock de AsyncStorage
-// jest.mock('@react-native-async-storage/async-storage', () => ({
-//   setItem: jest.fn(),
-//   getItem: jest.fn(),
-// }));
+import AsyncStorage, { __resetAllMocks, __getMockStorage } from '../__mocks__/async-storage'
 
 // Mock de Alert
 jest.spyOn(Alert, 'alert').mockImplementation(() => {});
@@ -17,6 +11,7 @@ jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 describe('Login', () => {
   beforeEach(() => {
     __mockReset();
+    __resetAllMocks();
     jest.clearAllMocks();
   });
 
