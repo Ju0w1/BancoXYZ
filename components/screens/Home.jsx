@@ -54,31 +54,56 @@ export function Home(){
     const fetchData = async (url) => {
         try {
             const token = await AsyncStorage.getItem('userToken');
-            const response = await fetch(url,{
+            const response = await fetch(url, {
                 headers: {
-                    'Authorization' : `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`
                 }
-            })
-            const json = await response.json()
-
-            const newAccountsArray = []
-
+            });
+            const json = await response.json();
+    
             const newBalance = {
                 id: arrayOfAccounts.length,
                 tipoCuenta: json.currency,
                 balance: json.accountBalance
-            }
+            };
             
-            newAccountsArray.push(newBalance)
-
-            setAccounts(newAccountsArray)
-        }catch (error){
-            setError(error)
-            console.log(error)
-        }finally{
-            setLoading(false)
+            setAccounts(prevAccounts => [...prevAccounts, newBalance]);
+        } catch (error) {
+            setError(error);
+            console.log(error);
+        } finally {
+            setLoading(false);
         }
     }
+
+    // const fetchData = async (url) => {
+    //     try {
+    //         const token = await AsyncStorage.getItem('userToken');
+    //         const response = await fetch(url,{
+    //             headers: {
+    //                 'Authorization' : `Bearer ${token}`
+    //             }
+    //         })
+    //         const json = await response.json()
+
+    //         const newAccountsArray = []
+
+    //         const newBalance = {
+    //             id: arrayOfAccounts.length,
+    //             tipoCuenta: json.currency,
+    //             balance: json.accountBalance
+    //         }
+            
+    //         newAccountsArray.push(newBalance)
+
+    //         setAccounts(newAccountsArray)
+    //     }catch (error){
+    //         setError(error)
+    //         console.log(error)
+    //     }finally{
+    //         setLoading(false)
+    //     }
+    // }
     const router = useRouter();
 
     const handleLogout = async () => {
@@ -124,12 +149,12 @@ export function Home(){
             {
                 isLoading ? (
                     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-                        <ActivityIndicator size={'large'}/>
+                        <ActivityIndicator testID="home-loading-indicator" size={'large'}/>
                     </View>
                 ): (
                     <>
-                        <Title title = {'Cuentas'} icon = {'attach-money'}/>
-                        <FlatList style = {styles.lista}
+                        <Title testID="titulo" title = {'Cuentas'} icon = {'attach-money'}/>
+                        <FlatList testID="listado-cuentas" style = {styles.lista}
                             data={arrayOfAccounts}
                             keyExtractor={(account) => account.id}
                             renderItem={({item, index}) => (
